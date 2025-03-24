@@ -224,8 +224,9 @@ Result GetSystemInfoHook(s64 *out, s32 type, s32 param)
         // Start of Level256 Network's modification
         case 0x30000:
         {
-            *out = 0x63AF23CF;
-            return 0x0A1CC816;
+            //*out = 0x63AF23CF;
+            *out = 0x61AFADCF;
+            return 0x9A1CC116;
         }
         // Start of Level256 Network's modification
 
