@@ -221,6 +221,14 @@ Result GetSystemInfoHook(s64 *out, s32 type, s32 param)
             return 1;
         }
 
+        // Start of Level256 Network's modification
+        case 0x30000:
+        {
+            *out = 0x63AF23CF;
+            return 0x0A1CC816;
+        }
+        // Start of Level256 Network's modification
+
         default:
             GetSystemInfo(out, type, param);
             break;
