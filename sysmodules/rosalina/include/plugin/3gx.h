@@ -81,7 +81,9 @@ enum _3gx_Compatibility {
 Result  Check_3gx_Magic(IFile *file);
 Result  Read_3gx_Header(IFile *file, _3gx_Header *header);
 Result  Read_3gx_ParseHeader(IFile *file, _3gx_Header *header);
-Result  Read_3gx_LoadSegments(IFile *file, _3gx_Header *header, void *dst);
+// Start of Level256 Network's modification
+// Result  Read_3gx_LoadSegments(IFile *file, _3gx_Header *header, void *dst);
+Result  Read_3gx_LoadSegments(IFile *file, _3gx_Header *header, void *dst, bool isOnlinePlugin);
 Result  Read_3gx_EmbeddedPayloads(IFile *file, _3gx_Header *header);
 Result  Set_3gx_LoadParams(u32* loadFunc, u32* params);
 void	Reset_3gx_LoadParams(void);

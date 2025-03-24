@@ -7,6 +7,13 @@
 #include "ifile.h"
 #include "utils.h"
 
+// Start of Level256 Network's modification
+#include "../../../global/level256/titles.h"
+
+bool isOnlinePlugin = false;
+bool isOnlineSupportedTitle(u64 titleId);
+// End of Level256 Network's modification
+
 // Use a global to avoid stack overflow, those structs are quite heavy
 static FS_DirectoryEntry   g_entries[10];
 
@@ -107,6 +114,15 @@ static Result   OpenFile(IFile *file, const char *path)
 
 static Result   OpenPluginFile(u64 tid, IFile *plugin)
 {
+    // Start of Level256 Network's modification
+    if (isOnlineSupportedTitle(tid) && R_SUCCEEDED(OpenFile(plugin, "/luma/plugins/Level256_Network/Level256.3gx")))
+    {
+        PluginLoaderCtx.pluginPath = "/luma/plugins/Level256_Network/Level256.3gx";
+        isOnlinePlugin = true;
+        return 0;
+    }
+    // End of Level256 Network's modification
+
     if (R_FAILED(FindPluginFile(tid)) || OpenFile(plugin, g_path))
     {
         // Try to open default plugin
@@ -257,7 +273,9 @@ bool     TryToLoadPlugin(Handle process, bool isHomebrew)
     if (!res) res = CheckPluginCompatibility(header, (u32)tid);
 
     // Read code
-    if (!res && R_FAILED(res = Read_3gx_LoadSegments(&plugin, header, ctx->memblock.memblock + sizeof(PluginHeader)))) {
+    // Level256 Network's modification
+    // if (!res && R_FAILED(res = Read_3gx_LoadSegments(&plugin, header, ctx->memblock.memblock + sizeof(PluginHeader), isOnlinePlugin))) {
+    if (!res && R_FAILED(res = Read_3gx_LoadSegments(&plugin, header, ctx->memblock.memblock + sizeof(PluginHeader), isOnlinePlugin))) {
         if (res == MAKERESULT(RL_PERMANENT, RS_INVALIDARG, RM_LDR, RD_NO_DATA)) ctx->error.message = "This plugin requires a loading function.";
         else if (res == MAKERESULT(RL_PERMANENT, RS_INVALIDARG, RM_LDR, RD_INVALID_ADDRESS)) ctx->error.message = "This plugin file is corrupted.";
         else ctx->error.message = "Couldn't read plugin's code";
